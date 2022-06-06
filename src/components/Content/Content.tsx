@@ -1,7 +1,8 @@
+import { useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
 import React from 'react'
 
-import Post from '../Post/'
-import { useSelector } from 'react-redux'
+import Post from '../Post'
 
 import './Content.scss'
 
@@ -10,12 +11,14 @@ const Content: React.FC = () => {
     posts: state.slugReducer.posts
   }))
   console.log(state.posts)
-  const elements = state.posts.map((elem, index)=> {
+  const elements = state.posts.map((elem, index) => {
     return (
       <li key={index}>
-        <Post
-          {...elem}
-        />
+        <Link to={`/articles/${index}`}>
+          <Post
+            {...elem}
+          />
+        </Link>
       </li>
     )
   })
