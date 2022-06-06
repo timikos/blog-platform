@@ -11,11 +11,11 @@ export function fetchPosts() {
     dispatch(fetchPostsStart())
     try {
       const response = await axios.get('https://kata.academy:8021/api/articles/')
-      const posts = [...response.data.tickets]
+      const posts = [...response.data.articles]
       dispatch(fetchPostsSuccess(posts))
     } catch (e) {
-      if (e.response.status === 404 || e.response.status === 500) {
-      }
+      // if (e.response.status === 404 || e.response.status === 500) {
+      // }
       dispatch(fetchPostsError(e))
     }
   }

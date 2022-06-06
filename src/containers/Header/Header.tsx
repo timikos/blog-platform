@@ -1,11 +1,15 @@
+import React from 'react'
+
+import Navbar from '../../components/Navbar'
+
 import './Header.scss'
 
-const Header = () => {
-    return (
-        <header className="header__container">
+const Header: React.FC = () => {
+  return (
+    <header className="header__container" >
+      <Navbar />
+    </header>
+  )
+}
 
-        </header>
-    );
-};
-
-export default Header;
+export default Header

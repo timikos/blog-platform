@@ -6,7 +6,7 @@ import {
 
 const initialState = {
   posts: [],
-  loadingTickets: false,
+  loadingPosts: false,
   error: null,
 }
 
@@ -15,19 +15,23 @@ const slugReducer = (state = initialState, action) => {
   case FETCH_POSTS_START:
     return {
       ...state,
-      loadingTickets: true
+      loadingPosts: true
     }
   case FETCH_POSTS_SUCCESS:
     return {
       ...state,
-      loadingTickets: false,
+      loadingPosts: false,
       posts: [...state.posts, ...action.posts]
     }
   case FETCH_POSTS_ERROR:
     return {
       ...state,
-      loadingTickets: false,
+      loadingPosts: false,
       error: action.error
+    }
+  default:
+    return {
+      ...state
     }
   }
 }

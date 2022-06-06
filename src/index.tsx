@@ -6,9 +6,12 @@ import App from './App'
 import store from './redux/store'
 
 const app = (
-    <Provider store={store}>
-        <App tab="home" />
-    </Provider>
+  <Provider store={store}>
+    <App />
+  </Provider>
 )
 
-createRoot(document.getElementById('root')).render(app)
+const rootElement = document.getElementById('root')
+
+const root = createRoot(rootElement as HTMLElement)
+root.render(app)

@@ -10,8 +10,14 @@ const loggerMiddleware = store => next => action => {
   return result
 }
 
+declare global {
+  interface Window {
+    __REDUX_DEVTOOLS_EXTENSION_COMPOSE__?: typeof compose;
+  }
+}
+
 const composeEnhancers = (typeof window !== 'undefined'
-    && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__)
+    && (window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose))
   || compose
 
 const store = createStore(rootReducer, composeEnhancers(applyMiddleware(

@@ -1,12 +1,15 @@
+import React from 'react'
+
+import Content from '../../components/Content/Content'
+
 import './MainContainer.scss'
-import Content from "../../components/Content";
 
-const MainContainer = () => {
-    return (
-        <main className="main__container">
-            <Content />
-        </main>
-    );
-};
+const MainContainer: React.FC = () => {
+  return (
+    <main className="main__container">
+      <Content />
+    </main>
+  )
+}
 
-export default MainContainer;
+export default MainContainer
