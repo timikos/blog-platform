@@ -10,6 +10,8 @@ const loggerMiddleware = store => next => action => {
   return result
 }
 
+export type RootState = ReturnType<typeof store.getState>
+
 declare global {
   interface Window {
     __REDUX_DEVTOOLS_EXTENSION_COMPOSE__?: typeof compose;

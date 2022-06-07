@@ -9,10 +9,13 @@ import Layout from './components/Layout'
 import Content from './components/Content'
 import PostDetails from './components/PostDetails'
 import NotFoundPage from './components/NotFoundPage'
+import SignIn from './components/SignIn'
+import SignUp from './components/SignUp'
+import Profile from './components/Profile'
 
 const App: React.FC = () => {
   const dispatch = useDispatch()
-  dispatch<any>(fetchPosts())
+  dispatch<any>(fetchPosts(0))
   return (
     <Router>
       <div className="App">
@@ -21,6 +24,9 @@ const App: React.FC = () => {
             <Route index element={<Content />} />
             <Route path="articles" element={<Content />} />
             <Route path="articles/:id" element={<PostDetails />} />
+            <Route path="sign-in" element={<SignIn />} />
+            <Route path="sign-up" element={<SignUp />} />
+            <Route path="profile" element={<Profile />} />
             <Route path="*" element={<NotFoundPage />} />
           </Route>
         </Routes>

@@ -4,13 +4,14 @@ import {
   FETCH_POSTS_ERROR,
   FETCH_POSTS_START,
   FETCH_POSTS_SUCCESS,
+  NULL_POSTS,
 } from './actionTypes'
 
-export function fetchPosts() {
+export function fetchPosts(page) {
   return async dispatch => {
     dispatch(fetchPostsStart())
     try {
-      const response = await axios.get('https://kata.academy:8021/api/articles/')
+      const response = await axios.get(`https://kata.academy:8021/api/articles/?limit=5&offset=${page}`)
       const posts = [...response.data.articles]
       dispatch(fetchPostsSuccess(posts))
     } catch (e) {
@@ -18,6 +19,12 @@ export function fetchPosts() {
       // }
       dispatch(fetchPostsError(e))
     }
+  }
+}
+
+export function nullPosts() {
+  return {
+    type: NULL_POSTS
   }
 }
 

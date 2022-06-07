@@ -1,12 +1,12 @@
 .post__container {
   height: 140px;
-  border: 2px solid blue;
   background: #fff;
   margin-bottom: 26px;
   display: flex;
   flex-wrap: wrap;
   position: relative;
-  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  color: black;
 }
 
 .post__title {
@@ -14,7 +14,7 @@
   position: relative;
   left: 10px;
   top: 5px;
-  font-size: 20px;
+  font-size: 22px;
 }
 
 .post__likes-container {
@@ -29,29 +29,48 @@
   font-size: 12px;
 }
 
-.post__tags {
+.post__tags-container {
+  display: flex;
+  flex-direction: row;
   position: absolute;
   left: 10px;
-  top: 35px;
+  top: 40px;
+}
+
+.post__tags {
+  margin-right: 5px;
+  padding: 0 5px;
+  border: 1px solid black;
+  border-radius: 3px;
 }
 
 .post__content {
   position: absolute;
   left: 10px;
-  top: 55px;
+  top: 70px;
 }
 
 .post__profile-container{
   position: absolute;
-  right: 10px;
+  left: 750px;
   top: 10px;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  height: 90px;
+  width: 180px;
+  align-items: flex-end;
 }
 
 .post__profile-name {
-
+  font-size: 18px;
+  text-align: right;
 }
 
 .post__profile-date {
+  position: relative;
+  top: -20px;
+  font-size: 12px;
   color: rgba(0, 0, 0, 0.5);
 }
 
@@ -59,7 +78,8 @@
   height: 46px;
   width: 46px;
   border-radius: 50%;
-  position:absolute;
+  position: relative;
   right: 0;
   top: 0;
+  margin-left: 10px;
 }

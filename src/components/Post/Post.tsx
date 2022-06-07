@@ -1,12 +1,28 @@
 import React from 'react'
+import { format, parseISO } from 'date-fns'
+
 import './Post.scss'
 
-const Post: React.FC = (
+interface PropsType {
+  title: string,
+  body: string,
+  description: string,
+  createdAt: string,
+  tagList: Array<any>,
+  author: {
+    username: string,
+    image: any
+  }
+}
+
+const Post: React.FC<PropsType> = (
   {
-    title, body,
+    title, body, description,
+    createdAt,
     tagList, author
   }
 ) => {
+
   return (
     <div className="post__container">
       <p className="post__title">{title}</p>
@@ -14,12 +30,17 @@ const Post: React.FC = (
         <i className="bi bi-heart" />
         <p className="post__likes-counter">0</p>
       </div>
-      <p className="post__tags">TAGS</p>
-      {/* <ReactMarkdown children={body}/> */}
-      <p className="post__content">{body}</p>
+      <div className="post__tags-container">
+        {tagList.map((elem, index) => {
+          return (
+            <p key={index} className="post__tags">{elem}</p>
+          )
+        })}
+      </div>
+      <p className="post__content">{description}</p>
       <div className="post__profile-container">
         <p className="post__profile-name">{author.username}</p>
-        <p className="post__profile-date">MARCH 5, 2020</p>
+        <p className="post__profile-date">{format(parseISO(createdAt), 'MMMM dd, yyyy')}</p>
         <img className="post__profile-img" src={author.image} alt="profile" />
       </div>
     </div>
