@@ -1,9 +1,9 @@
-import { Outlet } from 'react-router-dom'
 import React from 'react'
+import { Outlet } from 'react-router-dom'
 
 import Navbar from './Navbar'
 
-const Layout = () => {
+const Layout: React.FC = () => {
   return (
     <>
       <header className="header__container">

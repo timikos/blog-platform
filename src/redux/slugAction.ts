@@ -5,6 +5,7 @@ import {
   FETCH_POSTS_START,
   FETCH_POSTS_SUCCESS,
   NULL_POSTS,
+  LOGIN, LOGOUT
 } from './actionTypes'
 
 export function fetchPosts(page) {
@@ -25,6 +26,18 @@ export function fetchPosts(page) {
 export function nullPosts() {
   return {
     type: NULL_POSTS
+  }
+}
+
+export function login() {
+  return {
+    type: LOGIN
+  }
+}
+
+export function logout() {
+  return {
+    type: LOGOUT
   }
 }
 

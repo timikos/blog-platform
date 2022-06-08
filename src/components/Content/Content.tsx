@@ -1,16 +1,16 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
-import React, { useRef, useState } from 'react'
+import React, { useState } from 'react'
+import { Pagination } from '@mui/material'
 
 import Post from '../Post'
 import { RootState } from '../../redux/store'
-
-import './Content.scss'
-import { Pagination } from '@mui/material'
 import { fetchPosts, nullPosts } from '../../redux/slugAction'
 
+import './Content.scss'
+
 const Content: React.FC = () => {
-  const [page, setPage] = useState(1)
+  const [page, setPage] = useState<number>(1)
   const state = useSelector((state: RootState) => ({
     posts: state.slugReducer.posts
   }))

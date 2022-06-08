@@ -5,24 +5,22 @@ import './Post.scss'
 
 interface PropsType {
   title: string,
-  body: string,
   description: string,
   createdAt: string,
-  tagList: Array<any>,
+  tagList: React.ReactNode,
   author: {
     username: string,
-    image: any
+    image: React.ReactNode
   }
 }
 
 const Post: React.FC<PropsType> = (
   {
-    title, body, description,
+    title, description,
     createdAt,
     tagList, author
   }
 ) => {
-
   return (
     <div className="post__container">
       <p className="post__title">{title}</p>
