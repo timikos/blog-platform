@@ -9,6 +9,17 @@ import { fetchPosts, nullPosts } from '../../redux/slugAction'
 
 import './Content.scss'
 
+interface ElemTypes {
+  title: string,
+  description: string,
+  createdAt: string,
+  tagList: React.ReactNode[],
+  author: {
+    username: string,
+    image: string,
+  }
+}
+
 const Content: React.FC = () => {
   const [page, setPage] = useState<number>(1)
   const state = useSelector((state: RootState) => ({
@@ -21,7 +32,7 @@ const Content: React.FC = () => {
     dispatch(nullPosts())
     dispatch<any>(fetchPosts(page))
   }
-  const elements = state.posts.map((elem, index) => {
+  const elements = state.posts.map((elem: string, index: number) => {
     return (
       <li key={index}>
         <Link to={`/articles/${index}`}>

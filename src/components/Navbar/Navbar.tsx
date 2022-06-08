@@ -4,9 +4,10 @@ import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { logout } from '../../redux/slugAction'
+import { RootState } from '../../redux/store'
 
 const Navbar: React.FC = () => {
-  const state = useSelector(state => ({
+  const state = useSelector((state: RootState) => ({
     isLogged: state.slugReducer.isLogged
   }))
   const dispatch = useDispatch()
@@ -29,7 +30,7 @@ const Navbar: React.FC = () => {
         </div>}
       {state.isLogged
         && <div className="navbar__btn d-grid gap-2 d-md-flex justify-content-md-end">
-          <Link to="/">
+          <Link to="articles/new">
             <button className="btn btn-outline-success navbar__btn-create" type="button">Create article</button>
           </Link>
           <div className="navbar__profile-container">

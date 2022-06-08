@@ -1,5 +1,5 @@
 import React from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 
 import './App.scss'
@@ -12,10 +12,14 @@ import NotFoundPage from './components/NotFoundPage'
 import SignIn from './components/SignIn'
 import SignUp from './components/SignUp'
 import Profile from './components/Profile'
+import CreatePost from './components/CreatePost'
+import store, { RootState } from './redux/store'
 
 const App: React.FC = () => {
+
   const dispatch = useDispatch()
   dispatch<any>(fetchPosts(0))
+
   return (
     <Router>
       <div className="App">
@@ -23,6 +27,11 @@ const App: React.FC = () => {
           <Route path="/" element={<Layout />}>
             <Route index element={<Content />} />
             <Route path="articles" element={<Content />} />
+            <Route path="articles/new" element={
+              store.getState().slugReducer.isLogged
+                ? <CreatePost />
+                : <NotFoundPage />
+            } />
             <Route path="articles/:id" element={<PostDetails />} />
             <Route path="sign-in" element={<SignIn />} />
             <Route path="sign-up" element={<SignUp />} />

@@ -1,5 +1,4 @@
 import React from 'react'
-
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { ErrorMessage } from '@hookform/error-message'
 import { Link } from 'react-router-dom'
@@ -21,33 +20,39 @@ const SignIn: React.FC = () => {
         <h4 className="sign-in__name">Sign In</h4>
         <div>
           <label>Email address</label>
-          <input {...register('emailAddress', { required: true, maxLength: 20 })} />
-          <ErrorMessage
-            errors={errors}
-            name="emailAddress"
-            render={() => <p className="sign-in__error">Not a format</p>}
+          <input
+            type="email"
+            {...register('emailAddress', {
+              required: 'Email is required',
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: 'invalid email address'
+              }
+            })}
           />
+          {errors.emailAddress && <p className="sign-up__error">{errors.emailAddress.message}</p>}
         </div>
         <div>
           <label>Password</label>
-          <input {...register('password', {
-            required: true,
-            maxLength: 40,
-            minLength: 6,
-          })}
+          <input
+            type="password"
+            {...register('password', {
+              maxLength: 40,
+              required: 'You must specify a password',
+              minLength: {
+                value: 6,
+                message: 'Password must have at least 6 characters'
+              }
+            })
+            }
           />
-          <ErrorMessage
-            errors={errors}
-            name="password"
-            render={() => <p className="sign-in__error">Wrong</p>}
-          />
+          {errors.password && <p className="sign-in__error">{errors.password.message}</p>}
         </div>
         <input
           type="submit"
           value="Login"
           className="sign-in__submit"
         />
-
         <p className="sign_in__footer-text">Dont have an account? <Link to="/sign-up">Sign Up.</Link></p>
       </form>
     </section>

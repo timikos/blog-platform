@@ -15,7 +15,7 @@ interface Post {
   text: string;
   author: {
     username: string;
-    image: HTMLImageElement;
+    image: string;
   }
 }
 
@@ -25,6 +25,7 @@ const PostDetails: React.FC = () => {
   const state = useSelector((state: RootState) => ({
     posts: state.slugReducer.posts
   }))
+  console.log(state.posts[id].slug)
   useEffect(() => {
     axios.get(`https://kata.academy:8021/api/articles/${state.posts[id].slug}`)
       .then(res => setPost({
@@ -35,25 +36,27 @@ const PostDetails: React.FC = () => {
         author: res.data.article.author,
       }))
   }, [id])
-  return (
-    <div className="post-details__container">
-      <p className="post-details__title">{post.title}</p>
-      <div className="post-details__likes-container">
-        <i className="bi bi-heart" />
-        <p className="post-details__likes-counter">0</p>
+  if (post) {
+    return (
+      <div className="post-details__container">
+        <p className="post-details__title">{post.title}</p>
+        <div className="post-details__likes-container">
+          <i className="bi bi-heart"/>
+          <p className="post-details__likes-counter">0</p>
+        </div>
+        <p className="post-details__tags">{post.tags}</p>
+        <p className="post-details__description">{post.description}</p>
+        <ReactMarkdown className="post-details__content">
+          {post.text}
+        </ReactMarkdown>
+        <div className="post-details__profile-container">
+          <p className="post-details__profile-name">{post.author.username}</p>
+          <p className="post-details__profile-date">MARCH 5, 2020</p>
+          <img className="post-details__profile-img" src={post.author.image} alt="profile"/>
+        </div>
       </div>
-      <p className="post-details__tags">{post.tags}</p>
-      <p className="post-details__description">{post.description}</p>
-      <ReactMarkdown className="post-details__content">
-        {post.text}
-      </ReactMarkdown>
-      <div className="post-details__profile-container">
-        <p className="post-details__profile-name">{post.author.username}</p>
-        <p className="post-details__profile-date">MARCH 5, 2020</p>
-        <img className="post-details__profile-img" src={post.author.image} alt="profile" />
-      </div>
-    </div>
-  )
+    )
+  }
 }
 
 export default PostDetails

@@ -1,7 +1,5 @@
 import React from 'react'
-
 import { useForm, SubmitHandler, Controller } from 'react-hook-form'
-import { ErrorMessage } from '@hookform/error-message'
 import { Checkbox } from '@mui/material'
 import { Link } from 'react-router-dom'
 
@@ -12,15 +10,14 @@ interface IFormInput {
   emailAddress: string;
   password: string;
   repeatPassword: string;
-  exampleRequired: string;
+  myCheckbox: string;
 }
 
 const SignUp: React.FC = () => {
   const {
-    register, control, handleSubmit, formState: { errors }
+    register, control, handleSubmit, watch, formState: { errors }
   } = useForm<IFormInput>()
   const onSubmit: SubmitHandler<IFormInput> = data => console.log(data)
-
   return (
     <section className="sign-up__container">
       <form onSubmit={handleSubmit(onSubmit)} className="sign-up__form">
@@ -28,70 +25,78 @@ const SignUp: React.FC = () => {
         <div>
           <label>Username</label>
           <input {...register('firstName', {
-            required: true,
+            required: 'Login is required',
+            minLength: 3,
             maxLength: 20,
             pattern: {
               value: /[A-Za-z]{3}/,
-              message: 'error message'
+              message: 'Wrong symbols'
             },
-            minLength: 3
           })}
           />
-          <ErrorMessage
-            errors={errors}
-            name="firstName"
-            render={() => <p className="sign-up__error">Short username</p>}
-          />
+          {errors.firstName && <p className="sign-up__error">{errors.firstName.message}</p>}
         </div>
         <div>
           <label>Email address</label>
-          <input {...register('emailAddress', { required: true, maxLength: 20 })} />
-          <ErrorMessage
-            errors={errors}
-            name="emailAddress"
-            render={() => <p className="sign-up__error">Not a format</p>}
+          <input
+            type="email"
+            {...register('emailAddress', {
+              required: 'Email is required',
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: 'invalid email address'
+              }
+            })}
           />
+          {errors.emailAddress && <p className="sign-up__error">{errors.emailAddress.message}</p>}
         </div>
         <div>
           <label>Password</label>
-          <input {...register('password', {
-            required: true,
-            maxLength: 40,
-            minLength: 6,
-          })}
+          <input
+            type="password"
+            {...register('password', {
+              maxLength: 40,
+              required: 'You must specify a password',
+              minLength: {
+                value: 6,
+                message: 'Password must have at least 6 characters'
+              }
+            })}
           />
-          <ErrorMessage
-            errors={errors}
-            name="password"
-            render={() => <p className="sign-up__error">Wrong</p>}
-          />
+          {errors.password && <p className="sign-up__error">{errors.password.message}</p>}
         </div>
         <div>
           <label>Repeat password</label>
-          <input {...register('repeatPassword', {
-            required: true,
-            maxLength: 40,
-            minLength: 6
-          })}
+          <input
+            type="password"
+            {...register('repeatPassword', {
+              required: true,
+              maxLength: 40,
+              minLength: 6,
+              validate: (val: string) => {
+                if (watch('password') !== val) {
+                  return 'Your passwords do no match'
+                }
+              }
+            })}
           />
-          <ErrorMessage
-            errors={errors}
-            name="repeatPassword"
-            render={() => <p className="sign-up__error">Wrong</p>}
-          />
+          {errors.password && <p className="sign-up__error">{errors.password.message}</p>}
         </div>
         <div className="sign-up__checkbox">
           <Controller
+            name="myCheckbox"
             control={control}
-            rules={{ required: true }}
+            rules={{ required: 'Is required' }}
             render={({ field }) => <Checkbox {...field} />}
           />
           <label>I agree to the processing of my personal information</label>
-          <ErrorMessage
-            errors={errors}
-            name="MyCheckbox"
-            render={() => <p className="sign-up__error" style={{ top: '72%', left: '68%' }}>Need to agree</p>}
-          />
+          {errors.myCheckbox && <p
+            className="sign-up__error"
+            style={{
+              top: '72%',
+              left: '68%'
+            }}
+          >{errors.myCheckbox.message}</p>}
         </div>
         <input
           type="submit"

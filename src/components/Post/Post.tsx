@@ -7,10 +7,10 @@ interface PropsType {
   title: string,
   description: string,
   createdAt: string,
-  tagList: React.ReactNode,
+  tagList: React.ReactNode[],
   author: {
     username: string,
-    image: React.ReactNode
+    image: string,
   }
 }
 
@@ -29,11 +29,11 @@ const Post: React.FC<PropsType> = (
         <p className="post__likes-counter">0</p>
       </div>
       <div className="post__tags-container">
-        {tagList.map((elem, index) => {
+        {tagList ? tagList.map((elem, index) => {
           return (
             <p key={index} className="post__tags">{elem}</p>
           )
-        })}
+        }) : null}
       </div>
       <p className="post__content">{description}</p>
       <div className="post__profile-container">
