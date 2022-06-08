@@ -14,6 +14,8 @@ import SignUp from './components/SignUp'
 import Profile from './components/Profile'
 import CreatePost from './components/CreatePost'
 import store, { RootState } from './redux/store'
+import NoAccess from './components/NoAccess'
+import EditPost from './components/EditPost'
 
 const App: React.FC = () => {
 
@@ -30,9 +32,14 @@ const App: React.FC = () => {
             <Route path="articles/new" element={
               store.getState().slugReducer.isLogged
                 ? <CreatePost />
-                : <NotFoundPage />
+                : <NoAccess />
             } />
             <Route path="articles/:id" element={<PostDetails />} />
+            <Route path="articles/:id/edit" element={
+              store.getState().slugReducer.isLogged
+                ? <EditPost />
+                : <NoAccess />
+            } />
             <Route path="sign-in" element={<SignIn />} />
             <Route path="sign-up" element={<SignUp />} />
             <Route path="profile" element={<Profile />} />

@@ -1,12 +1,12 @@
 import React from 'react'
 
-import './CreatePost.scss'
+import '../CreatePost/CreatePost.scss'
 
-const CreatePost = () => {
+const EditPost = () => {
   const tags = [1,2]
   return (
     <section className="create-post__container">
-      <h4 className="create-post__name-container">Create new article</h4>
+      <h4 className="create-post__name-container">Edit article</h4>
       <div className="mb-3 create-post__title-container">
         <label htmlFor="formGroupExampleInput" className="form-label">Title</label>
         <input type="text" className="form-control" id="formGroupExampleInput"
@@ -45,4 +45,4 @@ const CreatePost = () => {
   )
 }
 
-export default CreatePost
+export default EditPost

@@ -4,6 +4,7 @@ import { Checkbox } from '@mui/material'
 import { Link } from 'react-router-dom'
 
 import './SignUp.scss'
+import axios from 'axios'
 
 interface IFormInput {
   firstName: string;
@@ -17,7 +18,19 @@ const SignUp: React.FC = () => {
   const {
     register, control, handleSubmit, watch, formState: { errors }
   } = useForm<IFormInput>()
-  const onSubmit: SubmitHandler<IFormInput> = data => console.log(data)
+  const onSubmit: SubmitHandler<IFormInput> = data => {
+    console.log(data)
+    axios.post(`https://kata.academy:8021/api/users`, {
+      "user": {
+        "username": data.firstName,
+        "email": data.emailAddress,
+        "password": data.password
+      }
+    })
+      .then(response => {
+        console.log(response)
+      })
+  }
   return (
     <section className="sign-up__container">
       <form onSubmit={handleSubmit(onSubmit)} className="sign-up__form">
@@ -98,12 +111,13 @@ const SignUp: React.FC = () => {
             }}
           >{errors.myCheckbox.message}</p>}
         </div>
-        <input
-          type="submit"
-          value="Create"
-          className="sign-up__submit"
-        />
-
+        {/* <Link to="/sign-in" onClick={onSubmit}> */}
+          <input
+            type="submit"
+            value="Create"
+            className="sign-up__submit"
+          />
+        {/* </Link> */}
         <p className="sign_up__footer-text">Already have an account? <Link to="/sign-in">Sign In.</Link></p>
       </form>
     </section>

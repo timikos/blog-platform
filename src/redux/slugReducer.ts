@@ -3,7 +3,8 @@ import {
   FETCH_POSTS_START,
   FETCH_POSTS_SUCCESS,
   NULL_POSTS,
-  LOGIN, LOGOUT
+  LOGIN, LOGOUT,
+  SET_TOKEN
 } from './actionTypes'
 
 type Action<K, V = void> = V extends void ? { type: K } : { type: K } & V
@@ -15,19 +16,25 @@ export type ActionType =
   | Action<'NULL_POSTS', { posts: Array<string> }>
   | Action<'LOGIN', { isLogged: boolean }>
   | Action<'LOGOUT', { isLogged: boolean }>
+  | Action<'SET_TOKEN', { token: string, nameAccount: string }>
 
 interface StateType {
   posts: Array<string>,
   loadingPosts: boolean,
   error: Array<string>,
-  isLogged: boolean
+  isLogged: boolean,
+  token: string,
+  nameAccount: string
 }
 
 const initialState: StateType = {
   posts: [],
   loadingPosts: false,
   error: [],
-  isLogged: true
+  isLogged: false,
+  token: '',
+  nameAccount: '',
+
 }
 
 const slugReducer = (state: StateType = initialState, action: ActionType) => {
@@ -46,6 +53,12 @@ const slugReducer = (state: StateType = initialState, action: ActionType) => {
     return {
       ...state,
       isLogged: false
+    }
+  case SET_TOKEN:
+    return {
+      ...state,
+      token: action.token,
+      nameAccount: action.nameAccount,
     }
   case FETCH_POSTS_START:
     return {

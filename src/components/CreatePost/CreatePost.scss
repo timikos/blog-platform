@@ -30,6 +30,27 @@
   padding: 0 32px;
 }
 
+.tags__container {
+  display: flex;
+}
+
 .tag-input {
+  margin-right: 15px;
   width: 300px;
+}
+
+.tag-btn__del {
+  margin-right: 15px;
+  font-size: 16px;
+  width: 100px;
+}
+
+.tag-btn__add {
+  display: inline;
+  font-size: 16px;
+  width: 100px;
+}
+
+.create-post__send {
+  width: 315px;
 }

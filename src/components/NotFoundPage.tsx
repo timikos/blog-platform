@@ -1,12 +1,12 @@
 import React from 'react'
 
-import './NotFoundPage.scss'
+import '../App.scss'
 
 const NotFoundPage: React.FC = () => {
   return (
-    <div className="notfound__container">
-      <h1>NOT FOUND PAGE</h1>
-    </div>
+    <section className="not-found__container">
+      <h2>Not found page</h2>
+    </section>
   )
 }
 

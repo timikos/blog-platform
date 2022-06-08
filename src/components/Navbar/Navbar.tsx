@@ -8,7 +8,8 @@ import { RootState } from '../../redux/store'
 
 const Navbar: React.FC = () => {
   const state = useSelector((state: RootState) => ({
-    isLogged: state.slugReducer.isLogged
+    isLogged: state.slugReducer.isLogged,
+    nameAccount: state.slugReducer.nameAccount
   }))
   const dispatch = useDispatch()
   const logoutHandler = () => {
@@ -34,7 +35,7 @@ const Navbar: React.FC = () => {
             <button className="btn btn-outline-success navbar__btn-create" type="button">Create article</button>
           </Link>
           <div className="navbar__profile-container">
-            <p className="navbar__profile-name">JOHN DOE</p>
+            <p className="navbar__profile-name">{state.nameAccount}</p>
             <img alt="avatar" src="" />
           </div>
           <Link to="/">
