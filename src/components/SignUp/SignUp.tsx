@@ -1,10 +1,10 @@
 import React from 'react'
 import { useForm, SubmitHandler, Controller } from 'react-hook-form'
 import { Checkbox } from '@mui/material'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import axios from 'axios'
 
 import './SignUp.scss'
-import axios from 'axios'
 
 interface IFormInput {
   firstName: string;
@@ -15,21 +15,25 @@ interface IFormInput {
 }
 
 const SignUp: React.FC = () => {
+  const navigate = useNavigate()
   const {
     register, control, handleSubmit, watch, formState: { errors }
   } = useForm<IFormInput>()
   const onSubmit: SubmitHandler<IFormInput> = data => {
     console.log(data)
-    axios.post(`https://kata.academy:8021/api/users`, {
-      "user": {
-        "username": data.firstName,
-        "email": data.emailAddress,
-        "password": data.password
+    axios.post('https://kata.academy:8021/api/users', {
+      user: {
+        username: data.firstName,
+        email: data.emailAddress,
+        password: data.password,
+        image: 'https://upload.wikimedia.org/wikipedia/commons/1/1d/No_image.JPG'
       }
     })
       .then(response => {
         console.log(response)
+        navigate('/sign-in')
       })
+      .catch(e => console.log(e))
   }
   return (
     <section className="sign-up__container">
@@ -111,13 +115,11 @@ const SignUp: React.FC = () => {
             }}
           >{errors.myCheckbox.message}</p>}
         </div>
-        {/* <Link to="/sign-in" onClick={onSubmit}> */}
-          <input
-            type="submit"
-            value="Create"
-            className="sign-up__submit"
-          />
-        {/* </Link> */}
+        <input
+          type="submit"
+          value="Create"
+          className="sign-up__submit"
+        />
         <p className="sign_up__footer-text">Already have an account? <Link to="/sign-in">Sign In.</Link></p>
       </form>
     </section>

@@ -6,7 +6,6 @@ import {
   FETCH_POSTS_SUCCESS,
   NULL_POSTS,
   LOGIN, LOGOUT,
-  SET_TOKEN
 } from './actionTypes'
 
 export function fetchPosts(page) {
@@ -32,21 +31,13 @@ export function nullPosts() {
 
 export function login() {
   return {
-    type: LOGIN
+    type: LOGIN,
   }
 }
 
 export function logout() {
   return {
     type: LOGOUT
-  }
-}
-
-export function setToken(token, nameAccount) {
-  return {
-    type: SET_TOKEN,
-    token,
-    nameAccount
   }
 }
 

@@ -1,13 +1,10 @@
 import React from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
-import { ErrorMessage } from '@hookform/error-message'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+
+import axios from 'axios'
 
 import './SignIn.scss'
-import axios from 'axios'
-import { useDispatch, useSelector } from 'react-redux'
-import { login, setToken } from '../../redux/slugAction'
-import { RootState } from '../../redux/store'
 
 interface IFormInput {
   emailAddress: string;
@@ -15,22 +12,28 @@ interface IFormInput {
 }
 
 const SignIn: React.FC = () => {
-  const state = useSelector((state: RootState) => ({
-    token: state.slugReducer.token,
-    isLogged: state.slugReducer.isLogged
-  }))
-  const dispatch = useDispatch()
+  const navigate = useNavigate()
   const { register, handleSubmit, formState: { errors } } = useForm<IFormInput>()
   const onSubmit: SubmitHandler<IFormInput> = data => {
     console.log(data)
-    axios.post(`https://kata.academy:8021/api/users/login`, {
-      "user": {
-        "email": data.emailAddress,
-        "password": data.password
+    axios.post('https://kata.academy:8021/api/users/login', {
+      user: {
+        email: data.emailAddress,
+        password: data.password
       }
     })
-      .then(response => dispatch(setToken(response.data.user.token,response.data.user.username)))
-      .then(() => dispatch(login()))
+      .then(response => {
+        localStorage.setItem('token', response.data.user.token)
+        localStorage.setItem('username', response.data.user.username)
+        localStorage.setItem('email', response.data.user.email)
+        localStorage.setItem('avatar', response.data.user.image)
+        localStorage.setItem('password', data.password)
+      })
+      .then(() => {
+        navigate('/')
+        document.location.reload()
+      })
+      .catch(e => console.log(e))
   }
 
   return (
