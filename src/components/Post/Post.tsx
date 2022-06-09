@@ -3,18 +3,9 @@ import { format, parseISO } from 'date-fns'
 
 import './Post.scss'
 
-interface PropsType {
-  title: string,
-  description: string,
-  createdAt: string,
-  tagList: React.ReactNode[],
-  author: {
-    username: string,
-    image: string,
-  }
-}
+import { IPropsType } from '../../interfaces'
 
-const Post: React.FC<PropsType> = (
+const Post: React.FC<IPropsType> = (
   {
     title, description,
     createdAt,

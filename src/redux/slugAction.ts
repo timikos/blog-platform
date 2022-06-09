@@ -1,4 +1,6 @@
-import axios from 'axios'
+import axios, { AxiosResponse } from 'axios'
+
+import { IResponseArticles, IResponsePost } from '../interfaces'
 
 import {
   FETCH_POSTS_ERROR,
@@ -12,8 +14,8 @@ export function fetchPosts(page) {
   return async dispatch => {
     dispatch(fetchPostsStart())
     try {
-      const response = await axios.get(`https://kata.academy:8021/api/articles/?limit=5&offset=${page}`)
-      const posts = [...response.data.articles]
+      const response: AxiosResponse = await axios.get<IResponseArticles>(`https://kata.academy:8021/api/articles/?limit=5&offset=${page}`)
+      const posts: Array<IResponsePost> = [...response.data.articles]
       dispatch(fetchPostsSuccess(posts))
     } catch (e) {
       // if (e.response.status === 404 || e.response.status === 500) {

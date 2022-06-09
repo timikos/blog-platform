@@ -2,8 +2,8 @@ import React from 'react'
 
 import './CreatePost.scss'
 
-const CreatePost = () => {
-  const tags = [1, 2]
+const CreatePost: React.FC = () => {
+  const tags: number[] = [1, 2]
   return (
     <section className="create-post__container">
       <h4 className="create-post__name-container">Create new article</h4>
@@ -36,7 +36,7 @@ const CreatePost = () => {
       </div>
       <div className="create-post__tags-container">
         <p>Tags</p>
-        {tags.map((elem, index) => {
+        {tags.map(() => {
           return (
             <div className="mb-3 tags__container">
               <input

@@ -6,23 +6,13 @@ import { Pagination } from '@mui/material'
 import Post from '../Post'
 import { RootState } from '../../redux/store'
 import { fetchPosts, nullPosts } from '../../redux/slugAction'
+import { IStatePosts } from '../../interfaces'
 
 import './Content.scss'
 
-interface ElemTypes {
-  title: string,
-  description: string,
-  createdAt: string,
-  tagList: React.ReactNode[],
-  author: {
-    username: string,
-    image: string,
-  }
-}
-
 const Content: React.FC = () => {
   const [page, setPage] = useState<number>(1)
-  const state = useSelector((state: RootState) => ({
+  const state: IStatePosts = useSelector((state: RootState) => ({
     posts: state.slugReducer.posts
   }))
   const dispatch = useDispatch()
@@ -32,13 +22,11 @@ const Content: React.FC = () => {
     dispatch(nullPosts())
     dispatch<any>(fetchPosts(page))
   }
-  const elements = state.posts.map((elem: string, index: number) => {
+  const elements: JSX.Element[] = state.posts.map((elem: any, index: number) => {
     return (
       <li key={index}>
         <Link to={`/articles/${index}`}>
-          <Post
-            {...elem}
-          />
+          <Post {...elem} />
         </Link>
       </li>
     )

@@ -1,22 +1,18 @@
 import React from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom'
-
 import axios from 'axios'
 
 import './SignIn.scss'
 
-interface IFormInput {
-  emailAddress: string;
-  password: string;
-}
+import { IFormInputSignIn, IResponseAccount } from '../../interfaces'
 
 const SignIn: React.FC = () => {
   const navigate = useNavigate()
-  const { register, handleSubmit, formState: { errors } } = useForm<IFormInput>()
-  const onSubmit: SubmitHandler<IFormInput> = data => {
+  const { register, handleSubmit, formState: { errors } } = useForm<IFormInputSignIn>()
+  const onSubmit: SubmitHandler<IFormInputSignIn> = data => {
     console.log(data)
-    axios.post('https://kata.academy:8021/api/users/login', {
+    axios.post<IResponseAccount>('https://kata.academy:8021/api/users/login', {
       user: {
         email: data.emailAddress,
         password: data.password

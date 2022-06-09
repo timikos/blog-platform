@@ -2,44 +2,35 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import axios from 'axios'
-import { useSelector } from 'react-redux'
-
-import { RootState } from '../../redux/store'
 
 import './EditProfile.scss'
 
-interface IFormInput {
-  firstName: string;
-  emailAddress: string;
-  password: string;
-  avatar: string
-}
+import { IFormInputEdit, IResponseAccount } from '../../interfaces'
 
-const EditProfile = () => {
-  const [error, setError] = useState(null)
+const EditProfile: React.FC = () => {
+  const [error, setError] = useState<string | null>(null)
   const navigate = useNavigate()
 
   const {
     register, handleSubmit, formState: { errors }
-  } = useForm<IFormInput>()
-  const onSubmit: SubmitHandler<IFormInput> = data => {
+  } = useForm<IFormInputEdit>()
+  const onSubmit: SubmitHandler<IFormInputEdit> = data => {
     setError(null)
-    console.log(data)
-    axios.put('https://kata.academy:8021/api/user', {
+    axios.put<IResponseAccount>('https://kata.academy:8021/api/user', {
       user: {
-        email: data.emailAddress? data.emailAddress : localStorage.getItem('email'),
+        email: data.emailAddress ? data.emailAddress : localStorage.getItem('email'),
         token: localStorage.getItem('token'),
-        username: data.firstName? data.firstName : localStorage.getItem('username'),
+        username: data.firstName ? data.firstName : localStorage.getItem('username'),
         bio: 'My bio',
-        image: data.avatar? data.avatar : localStorage.getItem('avatar'),
-        password: data.password? data.password : localStorage.getItem('password')
+        image: data.avatar ? data.avatar : localStorage.getItem('avatar'),
+        password: data.password ? data.password : localStorage.getItem('password')
       }
-    },{
+    }, {
       headers: {
         Authorization: `Token ${localStorage.getItem('token')}`
       }
     })
-      .then((response) => {
+      .then(() => {
         data.firstName ? localStorage.setItem('username', data.firstName) : null
         data.avatar ? localStorage.setItem('avatar', data.avatar) : null
         navigate('/')
@@ -54,10 +45,9 @@ const EditProfile = () => {
     <section className="edit-profile__container">
       {error
         ? <div className="alert alert-danger edit-profile__danger" role="alert">
-        Login or email is busy
-      </div>
-        : null
-      }
+            Login or email is busy
+        </div>
+        : null}
       <form onSubmit={handleSubmit(onSubmit)} className="edit-profile__form">
         <h4 className="edit-profile__name">Edit profile</h4>
         <div>

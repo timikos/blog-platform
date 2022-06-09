@@ -1,3 +1,5 @@
+import { IStateTypeReducer } from '../interfaces'
+
 import {
   FETCH_POSTS_ERROR,
   FETCH_POSTS_START,
@@ -16,21 +18,14 @@ export type ActionType =
   | Action<'LOGIN', { isLogged: boolean }>
   | Action<'LOGOUT', { isLogged: boolean }>
 
-interface StateType {
-  posts: Array<string>,
-  loadingPosts: boolean,
-  error: Array<string>,
-  isLogged: boolean,
-}
-
-const initialState: StateType = {
+const initialState: IStateTypeReducer = {
   posts: [],
   loadingPosts: false,
   error: [],
   isLogged: false,
 }
 
-const slugReducer = (state: StateType = initialState, action: ActionType) => {
+const slugReducer = (state: IStateTypeReducer = initialState, action: ActionType) => {
   switch (action.type) {
   case NULL_POSTS:
     return {

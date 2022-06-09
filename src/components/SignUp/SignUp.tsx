@@ -5,23 +5,15 @@ import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
 import './SignUp.scss'
-
-interface IFormInput {
-  firstName: string;
-  emailAddress: string;
-  password: string;
-  repeatPassword: string;
-  myCheckbox: string;
-}
+import { IFormInputSignUp, IResponseAccount } from '../../interfaces'
 
 const SignUp: React.FC = () => {
   const navigate = useNavigate()
   const {
     register, control, handleSubmit, watch, formState: { errors }
-  } = useForm<IFormInput>()
-  const onSubmit: SubmitHandler<IFormInput> = data => {
-    console.log(data)
-    axios.post('https://kata.academy:8021/api/users', {
+  } = useForm<IFormInputSignUp>()
+  const onSubmit: SubmitHandler<IFormInputSignUp> = data => {
+    axios.post<IResponseAccount>('https://kata.academy:8021/api/users', {
       user: {
         username: data.firstName,
         email: data.emailAddress,
@@ -29,8 +21,7 @@ const SignUp: React.FC = () => {
         image: 'https://upload.wikimedia.org/wikipedia/commons/1/1d/No_image.JPG'
       }
     })
-      .then(response => {
-        console.log(response)
+      .then(() => {
         navigate('/sign-in')
       })
       .catch(e => console.log(e))
