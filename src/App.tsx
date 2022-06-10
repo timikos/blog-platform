@@ -34,11 +34,11 @@ const App: React.FC = () => {
               element={<Content />}
             />
             <Route
-              path="articles/new"
+              path="articles/new-article"
               element={
                 store.getState().slugReducer.isLogged
                   ? <CreatePost />
-                  : <NoAccess />
+                  : <SignIn />
               }
             />
             <Route

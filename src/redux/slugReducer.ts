@@ -11,7 +11,7 @@ import {
 type Action<K, V = void> = V extends void ? { type: K } : { type: K } & V
 
 export type ActionType =
-  | Action<'FETCH_POSTS_ERROR', { error: Array<string> }>
+  Action<'FETCH_POSTS_ERROR', { error: Array<string> }>
   | Action<'FETCH_POSTS_START'>
   | Action<'FETCH_POSTS_SUCCESS', { posts: Array<string> }>
   | Action<'NULL_POSTS', { posts: Array<string> }>

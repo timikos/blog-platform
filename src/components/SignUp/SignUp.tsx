@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useForm, SubmitHandler, Controller } from 'react-hook-form'
 import { Checkbox } from '@mui/material'
 import { Link, useNavigate } from 'react-router-dom'
@@ -8,11 +8,13 @@ import './SignUp.scss'
 import { IFormInputSignUp, IResponseAccount } from '../../interfaces'
 
 const SignUp: React.FC = () => {
+  const [error, setError] = useState<string | null>(null)
   const navigate = useNavigate()
   const {
     register, control, handleSubmit, watch, formState: { errors }
   } = useForm<IFormInputSignUp>()
   const onSubmit: SubmitHandler<IFormInputSignUp> = data => {
+    setError(null)
     axios.post<IResponseAccount>('https://kata.academy:8021/api/users', {
       user: {
         username: data.firstName,
@@ -24,10 +26,20 @@ const SignUp: React.FC = () => {
       .then(() => {
         navigate('/sign-in')
       })
-      .catch(e => console.log(e))
+      .catch(e => {
+        setError(e)
+        setTimeout(() => {
+          setError(null)
+        }, 3000)
+      })
   }
   return (
     <section className="sign-up__container">
+      {error
+        ? <div className="alert alert-danger sign-up__danger" role="alert">
+          Login or email is busy
+        </div>
+        : null}
       <form onSubmit={handleSubmit(onSubmit)} className="sign-up__form">
         <h4 className="sign-up__name">Create new account</h4>
         <div>

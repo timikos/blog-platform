@@ -1,7 +1,10 @@
 import axios, { AxiosResponse } from 'axios'
+import { ThunkAction } from 'redux-thunk'
+import { Action, AnyAction } from 'redux'
 
 import { IResponseArticles, IResponsePost } from '../interfaces'
 
+import { RootState } from './store'
 import {
   FETCH_POSTS_ERROR,
   FETCH_POSTS_START,
@@ -10,53 +13,54 @@ import {
   LOGIN, LOGOUT,
 } from './actionTypes'
 
-export function fetchPosts(page) {
-  return async dispatch => {
+export function fetchPosts(page: number)
+  : ThunkAction<void, RootState, unknown, Action<string>> {
+  return async (dispatch) => {
     dispatch(fetchPostsStart())
     try {
-      const response: AxiosResponse = await axios.get<IResponseArticles>(`https://kata.academy:8021/api/articles/?limit=5&offset=${page}`)
+      const response: AxiosResponse = await axios.get<IResponseArticles>(
+        `https://kata.academy:8021/api/articles/?limit=5&offset=${page}`
+      )
       const posts: Array<IResponsePost> = [...response.data.articles]
       dispatch(fetchPostsSuccess(posts))
     } catch (e) {
-      // if (e.response.status === 404 || e.response.status === 500) {
-      // }
       dispatch(fetchPostsError(e))
     }
   }
 }
 
-export function nullPosts() {
+export function nullPosts(): AnyAction {
   return {
     type: NULL_POSTS
   }
 }
 
-export function login() {
+export function login(): AnyAction {
   return {
     type: LOGIN,
   }
 }
 
-export function logout() {
+export function logout(): AnyAction {
   return {
     type: LOGOUT
   }
 }
 
-export function fetchPostsStart() {
+export function fetchPostsStart(): AnyAction {
   return {
     type: FETCH_POSTS_START
   }
 }
 
-export function fetchPostsSuccess(posts) {
+export function fetchPostsSuccess(posts: IResponsePost[]): AnyAction {
   return {
     type: FETCH_POSTS_SUCCESS,
     posts
   }
 }
 
-export function fetchPostsError(e) {
+export function fetchPostsError(e: string[]): AnyAction {
   return {
     type: FETCH_POSTS_ERROR,
     error: e

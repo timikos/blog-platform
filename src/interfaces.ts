@@ -80,6 +80,11 @@ export interface IStateTypeReducer {
 
 export interface IStatePosts {
   posts: string[],
+  loadingPosts: boolean,
+}
+
+export interface IStatePostDetails {
+  posts: string[],
 }
 
 export interface IStateIsLogged {

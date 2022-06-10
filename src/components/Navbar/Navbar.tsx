@@ -36,7 +36,7 @@ const Navbar: React.FC = () => {
         </div>}
       {state.isLogged
         && <div className="navbar__btn d-grid gap-2 d-md-flex justify-content-md-end">
-          <Link to="articles/new">
+          <Link to="articles/new-article">
             <button
               className="btn btn-outline-success navbar__btn-create"
               type="button"

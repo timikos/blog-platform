@@ -37,6 +37,14 @@
   color: red;
 }
 
+.sign-up__danger {
+  border-radius: 0;
+  position: absolute;
+  width: 100%;
+  height: 35px;
+  padding-top: 5px;
+}
+
 .sign-up__checkbox {
   display: flex;
 

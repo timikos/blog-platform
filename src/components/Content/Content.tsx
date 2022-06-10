@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import React, { useState } from 'react'
-import { Pagination } from '@mui/material'
+import { Box, LinearProgress, Pagination } from '@mui/material'
 
 import Post from '../Post'
 import { RootState } from '../../redux/store'
@@ -13,7 +13,8 @@ import './Content.scss'
 const Content: React.FC = () => {
   const [page, setPage] = useState<number>(1)
   const state: IStatePosts = useSelector((state: RootState) => ({
-    posts: state.slugReducer.posts
+    posts: state.slugReducer.posts,
+    loadingPosts: state.slugReducer.loadingPosts
   }))
   const dispatch = useDispatch()
 
@@ -34,6 +35,10 @@ const Content: React.FC = () => {
 
   return (
     <section className="content">
+      {state.loadingPosts
+      && <Box sx={{ width: '100%' }}>
+        <LinearProgress />
+      </Box>}
       <ul>
         {elements}
       </ul>

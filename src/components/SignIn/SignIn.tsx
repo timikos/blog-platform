@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
@@ -8,10 +8,10 @@ import './SignIn.scss'
 import { IFormInputSignIn, IResponseAccount } from '../../interfaces'
 
 const SignIn: React.FC = () => {
+  const [error, setError] = useState<string | null>(null)
   const navigate = useNavigate()
   const { register, handleSubmit, formState: { errors } } = useForm<IFormInputSignIn>()
   const onSubmit: SubmitHandler<IFormInputSignIn> = data => {
-    console.log(data)
     axios.post<IResponseAccount>('https://kata.academy:8021/api/users/login', {
       user: {
         email: data.emailAddress,
@@ -29,11 +29,21 @@ const SignIn: React.FC = () => {
         navigate('/')
         document.location.reload()
       })
-      .catch(e => console.log(e))
+      .catch(e => {
+        setError(e)
+        setTimeout(() => {
+          setError(null)
+        }, 3000)
+      })
   }
 
   return (
     <section className="sign-in__container">
+      {error
+        ? <div className="alert alert-danger edit-profile__danger" role="alert">
+          Email or password is invalid
+        </div>
+        : null}
       <form onSubmit={handleSubmit(onSubmit)} className="sign-in__form">
         <h4 className="sign-in__name">Sign In</h4>
         <div>

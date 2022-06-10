@@ -5,14 +5,14 @@ import { useSelector } from 'react-redux'
 import ReactMarkdown from 'react-markdown'
 
 import { RootState } from '../../redux/store'
-import { IPostDetails, IStatePosts } from '../../interfaces'
+import { IPostDetails, IStatePostDetails } from '../../interfaces'
 
 import './PostDetails.scss'
 
 const PostDetails = () => {
   const { id } = useParams<{id: string}>()
   const [post, setPost] = useState<IPostDetails | null>(null)
-  const state: IStatePosts = useSelector((state: RootState) => ({
+  const state: IStatePostDetails = useSelector((state: RootState) => ({
     posts: state.slugReducer.posts
   }))
   useEffect(() => {
