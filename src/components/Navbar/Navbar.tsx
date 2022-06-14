@@ -1,11 +1,12 @@
 import React from 'react'
-import './Navbar.scss'
 import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { logout } from '../../redux/slugAction'
 import { RootState } from '../../redux/store'
 import { IStateIsLogged } from '../../interfaces'
+
+import './Navbar.scss'
 
 const Navbar: React.FC = () => {
   const state: IStateIsLogged = useSelector((state: RootState) => ({

@@ -30,6 +30,8 @@
   },
   "plugins": ["react", "prettier", "import", "@typescript-eslint"],
   "rules": {
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-non-null-assertion": "off",
     "react/jsx-indent": "off",
     "react/jsx-closing-tag-location": "off",
     "react/jsx-one-expression-per-line": "off",

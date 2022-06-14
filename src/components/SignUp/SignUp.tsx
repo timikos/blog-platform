@@ -4,8 +4,9 @@ import { Checkbox } from '@mui/material'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
-import './SignUp.scss'
 import { IFormInputSignUp, IResponseAccount } from '../../interfaces'
+
+import './SignUp.scss'
 
 const SignUp: React.FC = () => {
   const [error, setError] = useState<string | null>(null)

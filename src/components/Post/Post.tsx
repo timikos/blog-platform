@@ -1,23 +1,48 @@
 import React from 'react'
 import { format, parseISO } from 'date-fns'
-
-import './Post.scss'
+import axios from 'axios'
 
 import { IPropsType } from '../../interfaces'
+
+import './Post.scss'
 
 const Post: React.FC<IPropsType> = (
   {
     title, description,
     createdAt,
-    tagList, author
+    tagList, author,
+    favoritesCount, favorited,
+    slug
   }
 ) => {
+  const setLike = () => {
+    if (!favorited) {
+      axios.post(`https://kata.academy:8021/api/articles/${slug}/favorite`, {}, {
+        headers: {
+          Authorization: `Token ${localStorage.getItem('token')}`
+        }
+      }).catch(e => e)
+    } else {
+      axios.delete(`https://kata.academy:8021/api/articles/${slug}/favorite`, {
+        headers: {
+          Authorization: `Token ${localStorage.getItem('token')}`
+        }
+      })
+        .catch(e => e)
+    }
+  }
   return (
     <div className="post__container">
       <p className="post__title">{title}</p>
-      <div className="post__likes-container">
+      <div
+        role="button"
+        tabIndex={0}
+        className="post__likes-container"
+        onClick={setLike}
+        onKeyDown={() => setLike}
+      >
         <i className="bi bi-heart" />
-        <p className="post__likes-counter">0</p>
+        <p className="post__likes-counter">{favoritesCount}</p>
       </div>
       <div className="post__tags-container">
         {tagList ? tagList.map((elem, index) => {
@@ -30,7 +55,13 @@ const Post: React.FC<IPropsType> = (
       <div className="post__profile-container">
         <p className="post__profile-name">{author.username}</p>
         <p className="post__profile-date">{format(parseISO(createdAt), 'MMMM dd, yyyy')}</p>
-        <img className="post__profile-img" src={author.image} alt="profile" />
+        <img
+          className="post__profile-img"
+          src={author.image
+            ? author.image
+            : 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png'}
+          alt="profile"
+        />
       </div>
     </div>
   )

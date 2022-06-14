@@ -1,52 +1,35 @@
-import React, { ChangeEvent, useRef, useState } from 'react'
+import React, { useState } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import { SubmitHandler, useForm } from 'react-hook-form'
 
-import { IResponseAccount } from '../../interfaces'
+import { IFormInputCreatePost, IResponseAccount, ITag } from '../../interfaces'
+import setTagsForRequest from '../../helpers/setTags'
 
 import './CreatePost.scss'
-
-interface IFormInputCreatePost {
-  title: string;
-  description: string;
-  text: string;
-  tags: Array<string>;
-}
 
 const CreatePost: React.FC = () => {
   const [error, setError] = useState<string | null>(null)
   const navigate = useNavigate()
-  const [tags, setTags] = useState<string[]>([''])
+  const [tags, setTags] = useState<Array<ITag>>([{ id: 0 }])
+  const [num, setNum] = useState<number>(1)
   const {
-    register, handleSubmit, formState: { errors }
+    register, handleSubmit
   } = useForm<IFormInputCreatePost>()
   const delTag = (e) => {
-    setTags(() => {
-      const inx = elementsTags.findIndex((elem, index) => {
-        console.log(e.target.key)
-        console.log(index)
-        // elem.key === index
-      })
-
-      console.log(inx)
-      return [...tags.slice(0, inx), ...tags.slice(inx + 1)]
-    })
+    const inx: number = +(e.target.id)
+    setTags([...tags.slice(0, inx), ...tags.slice(inx + 1)])
   }
-  console.log(tags)
-  const addTag = () => {
-    const newTag = ''
-    const newArr = [...tags, newTag]
-    setTags(newArr)
+  const addTag = (num: number) => {
+    setNum(num + 1)
+    const newTag = {
+      id: num
+    }
+    setTags([...tags, newTag])
   }
-  const onSubmit: SubmitHandler<IFormInputCreatePost> = data => {
+  const onSubmit: SubmitHandler<IFormInputCreatePost> = (data: any) => {
     setError(null)
-    let tagsArray = Object.keys(data).map((elem, index) => {
-      if (elem.match(/tags/g)) return Object.values(data)[index]
-    })
-    tagsArray = tagsArray.filter(elem => elem)
-    data.tags = [...tagsArray]
-
+    setTagsForRequest(data)
     axios.post<IResponseAccount>('https://kata.academy:8021/api/articles', {
       article: {
         title: data.title,
@@ -63,7 +46,6 @@ const CreatePost: React.FC = () => {
         navigate('/')
       })
       .catch(e => {
-        console.log(e)
         setError(e)
         setTimeout(() => {
           setError(null)
@@ -73,9 +55,9 @@ const CreatePost: React.FC = () => {
 
   const elementsTags = tags.map((elem, index) => {
     return (
-      <div className="mb-3 tags__container" key={index}>
+      <div className="mb-3 tags__container" key={elem.id}>
         <input
-          {...register(`tags${index}`, {
+          {...register(`tags.${elem.id}`, {
             required: false,
             minLength: 3,
             maxLength: 40,
@@ -85,6 +67,7 @@ const CreatePost: React.FC = () => {
           placeholder="Tag"
         />
         <button
+          id={`${index}`}
           type="button"
           className="btn btn-outline-danger tag-btn__del"
           onClick={delTag}
@@ -97,6 +80,11 @@ const CreatePost: React.FC = () => {
 
   return (
     <section className="create-post__container">
+      {error
+        ? <div className="alert alert-danger edit-profile__danger" role="alert">
+          Server error!
+        </div>
+        : null}
       <form onSubmit={handleSubmit(onSubmit)} className="create-post__form">
         <h4 className="create-post__name-container">Create new article</h4>
         <div className="mb-3 create-post__title-container">
@@ -147,7 +135,7 @@ const CreatePost: React.FC = () => {
           <button
             type="button"
             className="btn btn-outline-primary tag-btn__add"
-            onClick={addTag}
+            onClick={() => addTag(num)}
           >
             Add tag
           </button>

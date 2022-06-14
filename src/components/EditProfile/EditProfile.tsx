@@ -38,9 +38,6 @@ const EditProfile: React.FC = () => {
       })
       .catch(e => {
         setError(e)
-        setTimeout(() => {
-          setError(null)
-        }, 3000)
       })
   }
 

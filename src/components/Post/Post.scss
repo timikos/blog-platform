@@ -13,15 +13,21 @@
   color: #1890FF;
   position: relative;
   left: 10px;
-  top: 5px;
+  margin-top: 10px;
   font-size: 22px;
 }
 
 .post__likes-container {
   position: relative;
   left: 20px;
-  top: 5px;
+  height: 20px;
+  margin-top: 20px;
   display: flex;
+  align-items: center;
+
+  &:hover {
+    color: blue;
+  }
 }
 
 .post__likes-counter {
@@ -35,6 +41,7 @@
   position: absolute;
   left: 10px;
   top: 40px;
+  margin: 5px 0;
 }
 
 .post__tags {
@@ -48,17 +55,18 @@
   position: absolute;
   left: 10px;
   top: 70px;
+  color: rgba(0, 0, 0, 0.75);
 }
 
 .post__profile-container{
   position: absolute;
-  left: 750px;
-  top: 10px;
+  left: 770px;
+  top: 20px;
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
   height: 90px;
-  width: 180px;
+  width: 160px;
   align-items: flex-end;
 }
 
@@ -77,9 +85,9 @@
 .post__profile-img {
   height: 46px;
   width: 46px;
+  border: 1px solid grey;
   border-radius: 50%;
   position: relative;
   right: 0;
   top: 0;
-  margin-left: 10px;
 }

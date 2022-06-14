@@ -23,6 +23,7 @@ const Content: React.FC = () => {
     dispatch(nullPosts())
     dispatch<any>(fetchPosts(page))
   }
+  console.log(state.posts)
   const elements: JSX.Element[] = state.posts.map((elem: any, index: number) => {
     return (
       <li key={index}>

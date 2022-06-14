@@ -71,6 +71,17 @@ export interface IFormInputSignIn {
   password: string;
 }
 
+export interface IFormInputCreatePost {
+  title: string;
+  description: string;
+  text: string;
+  tags: Array<string>;
+}
+
+export interface ITag {
+  id: number
+}
+
 export interface IStateTypeReducer {
   posts: Array<string>,
   loadingPosts: boolean,
@@ -85,6 +96,7 @@ export interface IStatePosts {
 
 export interface IStatePostDetails {
   posts: string[],
+  isLogged: boolean
 }
 
 export interface IStateIsLogged {
@@ -92,10 +104,13 @@ export interface IStateIsLogged {
 }
 
 export interface IPropsType {
+  slug: string,
   title: string,
   description: string,
   createdAt: string,
-  tagList: React.ReactNode[],
+  tagList: string[],
+  favorited: boolean,
+  favoritesCount: number,
   author: {
     username: string,
     image: string,
@@ -106,7 +121,10 @@ export interface IPostDetails {
   title: string;
   tags: Array<string>;
   description: string;
+  createdAt: string;
   text: string;
+  favoritesCount: number;
+  favorited: boolean;
   author: {
     username: string;
     image: string;
