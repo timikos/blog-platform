@@ -1,44 +1,34 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { SubmitHandler, useForm } from 'react-hook-form'
-import axios from 'axios'
+import { useSelector } from 'react-redux'
+
+import { IFormInputEdit, IStateIsLogged } from '../../interfaces'
+import { RootState } from '../../redux/store'
+import { editProfilePutFetch } from '../../apis/api'
 
 import './EditProfile.scss'
 
-import { IFormInputEdit, IResponseAccount } from '../../interfaces'
-
 const EditProfile: React.FC = () => {
+  const state: IStateIsLogged = useSelector((state: RootState) => ({
+    accountName: state.slugReducer.accountName,
+    accountEmail: state.slugReducer.accountEmail,
+  }))
   const [error, setError] = useState<string | null>(null)
   const navigate = useNavigate()
-
   const {
     register, handleSubmit, formState: { errors }
   } = useForm<IFormInputEdit>()
-  const onSubmit: SubmitHandler<IFormInputEdit> = data => {
+  const onSubmit: SubmitHandler<IFormInputEdit> = async data => {
     setError(null)
-    axios.put<IResponseAccount>('https://kata.academy:8021/api/user', {
-      user: {
-        email: data.emailAddress ? data.emailAddress : localStorage.getItem('email'),
-        token: localStorage.getItem('token'),
-        username: data.firstName ? data.firstName : localStorage.getItem('username'),
-        bio: 'My bio',
-        image: data.avatar ? data.avatar : localStorage.getItem('avatar'),
-        password: data.password ? data.password : localStorage.getItem('password')
-      }
-    }, {
-      headers: {
-        Authorization: `Token ${localStorage.getItem('token')}`
-      }
-    })
-      .then(() => {
-        data.firstName ? localStorage.setItem('username', data.firstName) : null
-        data.avatar ? localStorage.setItem('avatar', data.avatar) : null
-        navigate('/')
-        document.location.reload()
-      })
-      .catch(e => {
-        setError(e)
-      })
+    try {
+      await editProfilePutFetch(data, state)
+      data.avatar ? localStorage.setItem('avatar', data.avatar) : null
+      navigate('/')
+      document.location.reload()
+    } catch (e) {
+      setError(e)
+    }
   }
 
   return (
@@ -52,15 +42,17 @@ const EditProfile: React.FC = () => {
         <h4 className="edit-profile__name">Edit profile</h4>
         <div>
           <label>Username</label>
-          <input {...register('firstName', {
-            required: false,
-            minLength: 3,
-            maxLength: 20,
-            pattern: {
-              value: /[A-Za-z]{3}/,
-              message: 'Wrong symbols'
-            },
-          })}
+          <input
+            defaultValue={state.accountName}
+            {...register('firstName', {
+              required: false,
+              minLength: 3,
+              maxLength: 20,
+              pattern: {
+                value: /[A-Za-z]{3}/,
+                message: 'Wrong symbols'
+              },
+            })}
           />
           {errors.firstName && <p className="edit-profile__error">{errors.firstName.message}</p>}
         </div>
@@ -68,6 +60,7 @@ const EditProfile: React.FC = () => {
           <label>Email address</label>
           <input
             type="email"
+            defaultValue={state.accountEmail}
             {...register('emailAddress', {
               required: false,
               pattern: {
@@ -101,7 +94,6 @@ const EditProfile: React.FC = () => {
           })}
           />
         </div>
-
         <input
           type="submit"
           value="Save"

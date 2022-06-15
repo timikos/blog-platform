@@ -1,12 +1,10 @@
-import React from 'react'
-
 export interface IResponseAccount {
   user: {
     email: string,
-      token: string,
-      username: string,
-      bio: string,
-      image: string
+    token: string,
+    username: string,
+    bio: string,
+    image: string
   }
 }
 
@@ -59,11 +57,25 @@ export interface IFormInputEdit {
 }
 
 export interface IFormInputSignUp {
+  label: string;
+  type: string;
+  inputName: string;
+  required: boolean | string;
+  minLength: number | object;
+  maxLength: number | object;
+  pattern: object;
+  errorName: string;
+  validate: () => {};
+
+}
+
+export interface IFormInputSignUpSubmit {
   firstName: string;
   emailAddress: string;
   password: string;
   repeatPassword: string;
   myCheckbox: string;
+  validate: () => {};
 }
 
 export interface IFormInputSignIn {
@@ -86,7 +98,8 @@ export interface IStateTypeReducer {
   posts: Array<string>,
   loadingPosts: boolean,
   error: Array<string>,
-  isLogged: boolean,
+  accountName: string,
+  accountEmail: string
 }
 
 export interface IStatePosts {
@@ -94,13 +107,9 @@ export interface IStatePosts {
   loadingPosts: boolean,
 }
 
-export interface IStatePostDetails {
-  posts: string[],
-  isLogged: boolean
-}
-
 export interface IStateIsLogged {
-  isLogged: boolean
+  accountName: string;
+  accountEmail: string;
 }
 
 export interface IPropsType {

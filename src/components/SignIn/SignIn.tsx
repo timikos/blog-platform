@@ -1,42 +1,51 @@
 import React, { useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom'
-import axios from 'axios'
+import { useDispatch } from 'react-redux'
+
+import { IFormInputSignIn } from '../../interfaces'
+import { inputsSignIn } from '../../models/form-inputs'
+import { login } from '../../redux/slugAction'
+import { signInFetch } from '../../apis/api'
 
 import './SignIn.scss'
-
-import { IFormInputSignIn, IResponseAccount } from '../../interfaces'
 
 const SignIn: React.FC = () => {
   const [error, setError] = useState<string | null>(null)
   const navigate = useNavigate()
-  const { register, handleSubmit, formState: { errors } } = useForm<IFormInputSignIn>()
-  const onSubmit: SubmitHandler<IFormInputSignIn> = data => {
-    axios.post<IResponseAccount>('https://kata.academy:8021/api/users/login', {
-      user: {
-        email: data.emailAddress,
-        password: data.password
-      }
-    })
-      .then(response => {
-        localStorage.setItem('token', response.data.user.token)
-        localStorage.setItem('username', response.data.user.username)
-        localStorage.setItem('email', response.data.user.email)
-        localStorage.setItem('avatar', response.data.user.image)
-        localStorage.setItem('password', data.password)
-      })
-      .then(() => {
-        navigate('/')
-        document.location.reload()
-      })
-      .catch(e => {
-        setError(e)
-        setTimeout(() => {
-          setError(null)
-        }, 3000)
-      })
+  const dispatch = useDispatch()
+  const { register, handleSubmit, formState: { errors } } = useForm<any>()
+  const onSubmit: SubmitHandler<IFormInputSignIn> = async data => {
+    try {
+      const response = await signInFetch(data)
+      localStorage.setItem('token', response.data.user.token)
+      localStorage.setItem('avatar', response.data.user.image)
+      dispatch(login(response.data.user.username, response.data.user.email))
+      navigate('/')
+      document.location.reload()
+    } catch (e) {
+      setError(e)
+      setTimeout(() => {
+        setError(null)
+      }, 3000)
+    }
   }
 
+  const inputs = inputsSignIn.map((elem, index) => {
+    return (
+      <div key={index}>
+        <label>{elem.label}</label>
+        <input
+          type={elem.type}
+          {...register(`${elem.inputName}`, {
+            required: elem.required,
+            pattern: elem.pattern,
+          })}
+        />
+        {errors[elem.errorName] && <p className="sign-up__error">{errors[elem.errorName].message}</p>}
+      </div>
+    )
+  })
   return (
     <section className="sign-in__container">
       {error
@@ -46,36 +55,7 @@ const SignIn: React.FC = () => {
         : null}
       <form onSubmit={handleSubmit(onSubmit)} className="sign-in__form">
         <h4 className="sign-in__name">Sign In</h4>
-        <div>
-          <label>Email address</label>
-          <input
-            type="email"
-            {...register('emailAddress', {
-              required: 'Email is required',
-              pattern: {
-                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                message: 'invalid email address'
-              }
-            })}
-          />
-          {errors.emailAddress && <p className="sign-up__error">{errors.emailAddress.message}</p>}
-        </div>
-        <div>
-          <label>Password</label>
-          <input
-            type="password"
-            {...register('password', {
-              maxLength: 40,
-              required: 'You must specify a password',
-              minLength: {
-                value: 6,
-                message: 'Password must have at least 6 characters'
-              }
-            })
-            }
-          />
-          {errors.password && <p className="sign-in__error">{errors.password.message}</p>}
-        </div>
+        {inputs}
         <input
           type="submit"
           value="Login"

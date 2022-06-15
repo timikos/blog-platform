@@ -15,14 +15,15 @@ export type ActionType =
   | Action<'FETCH_POSTS_START'>
   | Action<'FETCH_POSTS_SUCCESS', { posts: Array<string> }>
   | Action<'NULL_POSTS', { posts: Array<string> }>
-  | Action<'LOGIN', { isLogged: boolean }>
+  | Action<'LOGIN', { isLogged: boolean, accountName: string, accountEmail: string }>
   | Action<'LOGOUT', { isLogged: boolean }>
 
 const initialState: IStateTypeReducer = {
   posts: [],
   loadingPosts: false,
   error: [],
-  isLogged: false,
+  accountName: '',
+  accountEmail: ''
 }
 
 const slugReducer = (state: IStateTypeReducer = initialState, action: ActionType) => {
@@ -35,12 +36,14 @@ const slugReducer = (state: IStateTypeReducer = initialState, action: ActionType
   case LOGIN:
     return {
       ...state,
-      isLogged: true,
+      accountName: action.accountName,
+      accountEmail: action.accountEmail,
     }
   case LOGOUT:
     return {
       ...state,
-      isLogged: false,
+      accountName: '',
+      accountEmail: '',
     }
   case FETCH_POSTS_START:
     return {

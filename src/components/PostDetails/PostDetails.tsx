@@ -7,7 +7,8 @@ import { Popconfirm } from 'antd'
 import { format, parseISO } from 'date-fns'
 
 import { RootState } from '../../redux/store'
-import { IPostDetails, IStatePostDetails } from '../../interfaces'
+import { IPostDetails, IStatePosts } from '../../interfaces'
+import { favoritePostFetch, postDetailsGetFetch, unfavoritePostFetch } from '../../apis/api'
 
 import './PostDetails.scss'
 import 'antd/dist/antd.min.css'
@@ -16,27 +17,30 @@ const PostDetails = () => {
   const { id } = useParams<{id: string}>()
   const navigate = useNavigate()
   const [post, setPost] = useState<IPostDetails | null>(null)
-  const state: IStatePostDetails = useSelector((state: RootState) => ({
+  const state: IStatePosts = useSelector((state: RootState) => ({
     posts: state.slugReducer.posts,
-    isLogged: state.slugReducer.isLogged
+    loadingPosts: state.slugReducer.loadingPosts
   }))
   useEffect(() => {
     if (id) {
-      axios.get(`https://kata.academy:8021/api/articles/${state.posts[id].slug}`, {
-        headers: {
-          Authorization: `Token ${localStorage.getItem('token')}`
+      const asyncFetch = async () => {
+        try {
+          const res = await postDetailsGetFetch(state, id)
+          setPost({
+            title: res.data.article.slug,
+            tags: res.data.article.tagList,
+            description: res.data.article.description,
+            text: res.data.article.body,
+            createdAt: res.data.article.createdAt,
+            author: res.data.article.author,
+            favoritesCount: res.data.article.favoritesCount,
+            favorited: res.data.article.favorited
+          })
+        } catch (e) {
+          return e
         }
-      })
-        .then(res => setPost({
-          title: res.data.article.slug,
-          tags: res.data.article.tagList,
-          description: res.data.article.description,
-          text: res.data.article.body,
-          createdAt: res.data.article.createdAt,
-          author: res.data.article.author,
-          favoritesCount: res.data.article.favoritesCount,
-          favorited: res.data.article.favorited
-        }))
+      }
+      asyncFetch()
     }
   }, [id])
 
@@ -53,14 +57,11 @@ const PostDetails = () => {
   const editPost: MouseEventHandler<HTMLButtonElement> = () => {
     navigate('edit')
   }
-  const setLike = () => {
+  const setLike = async () => {
     if (id && post) {
       if (!post?.favorited) {
-        axios.post(`https://kata.academy:8021/api/articles/${state.posts[id].slug}/favorite`, {}, {
-          headers: {
-            Authorization: `Token ${localStorage.getItem('token')}`
-          }
-        }).then(() => {
+        try {
+          await favoritePostFetch(state, id)
           setPost({
             title: post.title,
             tags: post.tags,
@@ -71,14 +72,12 @@ const PostDetails = () => {
             favoritesCount: post.favoritesCount + 1,
             favorited: post.favorited
           })
-        })
-          .catch(e => e)
+        } catch (e) {
+          return e
+        }
       } else {
-        axios.delete(`https://kata.academy:8021/api/articles/${state.posts[id].slug}/favorite`, {
-          headers: {
-            Authorization: `Token ${localStorage.getItem('token')}`
-          }
-        }).then(() => {
+        try {
+          await unfavoritePostFetch(state, id)
           setPost({
             title: post.title,
             tags: post.tags,
@@ -89,7 +88,9 @@ const PostDetails = () => {
             favoritesCount: post.favoritesCount - 1,
             favorited: post.favorited
           })
-        }).catch(e => e)
+        } catch (e) {
+          return e
+        }
       }
     }
   }
@@ -124,7 +125,8 @@ const PostDetails = () => {
           <p className="post-details__profile-date">{format(parseISO(post.createdAt), 'MMMM dd, yyyy')}</p>
           <img className="post-details__profile-img" src={post.author.image} alt="profile" />
         </div>
-        {(state.isLogged && post.author.username === localStorage.getItem('username'))
+        {(localStorage.getItem('token')
+          && post.author.username === localStorage.getItem('username'))
             && <div className="post-details__buttons">
               <Popconfirm
                 title="Вы уверены?"

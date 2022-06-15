@@ -1,8 +1,8 @@
-import axios, { AxiosResponse } from 'axios'
 import { ThunkAction } from 'redux-thunk'
 import { Action, AnyAction } from 'redux'
 
-import { IResponseArticles, IResponsePost } from '../interfaces'
+import { IResponsePost } from '../interfaces'
+import { postsFetch } from '../apis/api'
 
 import { RootState } from './store'
 import {
@@ -16,14 +16,9 @@ import {
 export function fetchPosts(page: number)
   : ThunkAction<void, RootState, unknown, Action<string>> {
   return async (dispatch) => {
-    const url = `https://kata.academy:8021/api/articles/?limit=5&offset=${page}`
     dispatch(fetchPostsStart())
     try {
-      const response: AxiosResponse = await axios.get<IResponseArticles>(url, {
-        headers: {
-          Authorization: `Token ${localStorage.getItem('token')}`
-        }
-      })
+      const response = await postsFetch(page)
       const posts: Array<IResponsePost> = [...response.data.articles]
       dispatch(fetchPostsSuccess(posts))
     } catch (e) {
@@ -38,9 +33,11 @@ export function nullPosts(): AnyAction {
   }
 }
 
-export function login(): AnyAction {
+export function login(accountName, accountEmail): AnyAction {
   return {
     type: LOGIN,
+    accountName,
+    accountEmail,
   }
 }
 

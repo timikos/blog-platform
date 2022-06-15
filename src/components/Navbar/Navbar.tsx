@@ -10,23 +10,21 @@ import './Navbar.scss'
 
 const Navbar: React.FC = () => {
   const state: IStateIsLogged = useSelector((state: RootState) => ({
-    isLogged: state.slugReducer.isLogged,
+    accountName: state.slugReducer.accountName,
+    accountEmail: state.slugReducer.accountEmail,
   }))
   const dispatch = useDispatch()
   const logoutHandler = () => {
     dispatch(logout())
     localStorage.removeItem('token')
-    localStorage.removeItem('username')
     localStorage.removeItem('avatar')
-    localStorage.removeItem('email')
-    localStorage.removeItem('password')
   }
   return (
     <section className="navbar">
       <Link to="/">
         <p className="navbar__logo">Realworld Blog</p>
       </Link>
-      {!state.isLogged
+      {!localStorage.getItem('token')
         && <div className="navbar__btn d-grid gap-2 d-md-flex justify-content-md-end">
           <Link to="sign-in">
             <button className="btn me-md-2" type="button">Sign In</button>
@@ -35,7 +33,7 @@ const Navbar: React.FC = () => {
             <button type="button" className="btn btn-outline-success">Sign Up</button>
           </Link>
         </div>}
-      {state.isLogged
+      {localStorage.getItem('token')
         && <div className="navbar__btn d-grid gap-2 d-md-flex justify-content-md-end">
           <Link to="articles/new-article">
             <button
@@ -47,7 +45,7 @@ const Navbar: React.FC = () => {
           </Link>
           <Link to="edit-profile">
             <div className="navbar__profile-container">
-              <p className="navbar__profile-name">{localStorage.getItem('username')}</p>
+              <p className="navbar__profile-name">{state.accountName}</p>
               <img
                 className="navbar__profile-avatar"
                 alt="avatar"

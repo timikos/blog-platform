@@ -31,9 +31,13 @@ const Post: React.FC<IPropsType> = (
         .catch(e => e)
     }
   }
+  const limitTitle = (title) => {
+    const limited = title.substring(0, 50) + '...'
+    return title.length > 50 ? limited : title
+  }
   return (
     <div className="post__container">
-      <p className="post__title">{title}</p>
+      <p className="post__title">{limitTitle(title)}</p>
       <div
         role="button"
         tabIndex={0}

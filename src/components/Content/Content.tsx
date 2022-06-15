@@ -17,13 +17,11 @@ const Content: React.FC = () => {
     loadingPosts: state.slugReducer.loadingPosts
   }))
   const dispatch = useDispatch()
-
   const paginationChange = (e) => {
     setPage(e.target.ariaLabel[11])
     dispatch(nullPosts())
     dispatch<any>(fetchPosts(page))
   }
-  console.log(state.posts)
   const elements: JSX.Element[] = state.posts.map((elem: any, index: number) => {
     return (
       <li key={index}>
@@ -53,7 +51,6 @@ const Content: React.FC = () => {
         }}
       />
     </section>
-
   )
 }
 

@@ -1,71 +1,40 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 
 import { fetchPosts, login } from './redux/slugAction'
-import Layout from './components/Layout'
-import Content from './components/Content'
-import PostDetails from './components/PostDetails'
-import NotFoundPage from './components/NotFoundPage'
-import SignIn from './components/SignIn'
-import SignUp from './components/SignUp'
-import Profile from './components/Profile'
-import CreatePost from './components/CreatePost'
-import store from './redux/store'
-import NoAccess from './components/NoAccess'
-import EditPost from './components/EditPost'
-import EditProfile from './components/EditProfile'
+import Header from './containers/Header'
+import appRoutes from './models/routes'
+import { accountFetch } from './apis/api'
 
 import './App.scss'
 
 const App: React.FC = () => {
   const dispatch = useDispatch()
-  dispatch<any>(fetchPosts(0))
-  localStorage.getItem('token')
-    ? dispatch(login()) : null
+  useEffect(() => {
+    dispatch<any>(fetchPosts(0))
+    const fetchData = async () => {
+      if (localStorage.getItem('token')) {
+        try {
+          const res = await accountFetch()
+          console.log(res)
+          dispatch(login(res.data.user.username, res.data.user.email))
+        } catch (e) {
+          return e
+        }
+      }
+    }
+    fetchData()
+  }, [])
+
   return (
     <Router>
       <div className="App">
+        <Header />
         <Routes>
-          <Route path="/" element={<Layout />}>
-            <Route index element={<Content />} />
-            <Route
-              path="articles"
-              element={<Content />}
-            />
-            <Route
-              path="articles/new-article"
-              element={
-                store.getState().slugReducer.isLogged
-                  ? <CreatePost />
-                  : <SignIn />
-              }
-            />
-            <Route
-              path="articles/:id"
-              element={<PostDetails />}
-            />
-            <Route
-              path="articles/:id/edit"
-              element={
-                store.getState().slugReducer.isLogged
-                  ? <EditPost />
-                  : <NoAccess />
-              }
-            />
-            <Route path="sign-in" element={<SignIn />} />
-            <Route path="sign-up" element={<SignUp />} />
-            <Route path="profile" element={<Profile />} />
-            <Route
-              path="edit-profile"
-              element={
-                localStorage.getItem('token')
-                  ? <EditProfile />
-                  : <NoAccess />
-              }
-            />
-            <Route path="*" element={<NotFoundPage />} />
-          </Route>
+          { appRoutes.map(({ path, element }, index) => {
+            return <Route path={path} element={element} key={index} />
+          })}
         </Routes>
       </div>
     </Router>
